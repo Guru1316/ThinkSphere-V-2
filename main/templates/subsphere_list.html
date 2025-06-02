@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Subspheres{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">All Subspheres</h5>
+        <a href="{% url 'create_subsphere' %}" class="btn btn-primary btn-sm">
+            <i class="fas fa-plus me-1"></i> Create Subsphere
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            {% for subsphere in subspheres %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="card-title">{{ subsphere.name }}</h5>
+                            <span class="badge bg-primary">{{ subsphere.members|length }} members</span>
+                        </div>
+                        <p class="card-text text-muted">{{ subsphere.description|truncatechars:100 }}</p>
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'subsphere_detail' subsphere.id %}" class="btn btn-sm btn-outline-primary">
+                                View
+                            </a>
+                            {% if request.session.user_id %}
+                                {% if user in subsphere.members %}
+                                <a href="{% url 'leave_subsphere' subsphere.id %}" class="btn btn-sm btn-outline-danger">
+                                    Leave
+                                </a>
+                                {% else %}
+                                <a href="{% url 'join_subsphere' subsphere.id %}" class="btn btn-sm btn-primary">
+                                    Join
+                                </a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-footer text-muted small">
+                        Created by <a href="{% url 'profile' subsphere.created_by.username %}">{{ subsphere.created_by.username }}</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="text-muted">No subspheres created yet. Be the first to create one!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

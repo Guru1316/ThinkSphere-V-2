@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ subsphere.name }}{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <div>
+            <h5 class="mb-0">{{ subsphere.name }}</h5>
+            <p class="mb-0 text-muted small">{{ subsphere.members|length }} members</p>
+        </div>
+        <div>
+            {% if request.session.user_id %}
+                {% if is_member %}
+                <a href="{% url 'leave_subsphere' subsphere.id %}" class="btn btn-sm btn-outline-danger me-2">
+                    Leave
+                </a>
+                {% else %}
+                <a href="{% url 'join_subsphere' subsphere.id %}" class="btn btn-sm btn-primary me-2">
+                    Join
+                </a>
+                {% endif %}
+                
+                {% if is_member %}
+                <a href="{% url 'create_post' subsphere.id %}" class="btn btn-sm btn-success">
+                    <i class="fas fa-plus me-1"></i> Create Post
+                </a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-body">
+        <p>{{ subsphere.description }}</p>
+        
+        <div class="d-flex align-items-center mb-4">
+            <div class="flex-shrink-0">
+                <img src="{{ subsphere.created_by.profile_image.url }}" alt="Creator" class="rounded-circle" width="40">
+            </div>
+            <div class="flex-grow-1 ms-3">
+                <p class="mb-0 small">Created by <a href="{% url 'profile' subsphere.created_by.username %}">{{ subsphere.created_by.username }}</a></p>
+                <p class="mb-0 small text-muted">{{ subsphere.created_at|date:"F j, Y" }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Posts in this Subsphere -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Posts</h5>
+    </div>
+    <div class="card-body">
+        {% if posts %}
+            {% for post in posts %}
+                {% include 'partials/post_card.html' with post=post %}
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">No posts in this subsphere yet.</p>
+            {% if is_member %}
+            <a href="{% url 'create_post' subsphere.id %}" class="btn btn-primary">
+                Create First Post
+            </a>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

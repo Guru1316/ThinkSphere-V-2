@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Filter Posts</h5>
+                </div>
+                <div class="card-body">
+                    <form method="GET" action="{% url 'filter_posts' %}">
+                        <div class="mb-3">
+                            <label for="keyword" class="form-label">Keyword</label>
+                            <input type="text" class="form-control" id="keyword" name="keyword" value="{{ keyword }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="subsphere_id" class="form-label">Subsphere</label>
+                            <select class="form-select" id="subsphere_id" name="subsphere_id">
+                                <option value="">All Subspheres</option>
+                                {% for s in subspheres %}
+                                <option value="{{ s.id }}" {% if selected_subsphere_id == s.id|stringformat:"s" %}selected{% endif %}>{{ s.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="author" class="form-label">Author</label>
+                            <input type="text" class="form-control" id="author" name="author" value="{{ author_username }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="sort" class="form-label">Sort By</label>
+                            <select class="form-select" id="sort" name="sort">
+                                <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest First</option>
+                                <option value="oldest" {% if sort_by == 'oldest' %}selected{% endif %}>Oldest First</option>
+                                <option value="upvotes" {% if sort_by == 'upvotes' %}selected{% endif %}>Most Upvotes</option>
+                                <option value="downvotes" {% if sort_by == 'downvotes' %}selected{% endif %}>Most Downvotes</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4>Filtered Posts</h4>
+                <span class="badge bg-primary">{{ posts.count }} results</span>
+            </div>
+            
+            {% if posts %}
+                {% for post in posts %}
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="card-title">
+                                    <a href="{% url 'post_detail' post_id=post.id %}" class="text-decoration-none">{{ post.title }}</a>
+                                </h5>
+                                <p class="text-muted small mb-2">
+                                    Posted in <a href="{% url 'subsphere_detail' subsphere_id=post.subsphere.id %}" class="text-decoration-none">{{ post.subsphere.name }}</a> 
+                                    by <a href="{% url 'profile' username=post.created_by.username %}" class="text-decoration-none">{{ post.created_by.username }}</a>
+                                    on {{ post.created_at|date:"M d, Y" }}
+                                </p>
+                            </div>
+                            <div class="d-flex">
+                                <span class="badge bg-success me-2">
+                                    <i class="bi bi-arrow-up"></i> {{ post.upvotes }}
+                                </span>
+                                <span class="badge bg-danger">
+                                    <i class="bi bi-arrow-down"></i> {{ post.downvotes }}
+                                </span>
+                            </div>
+                        </div>
+                        <p class="card-text mt-2">{{ post.content|truncatechars:200 }}</p>
+                        {% if post.image %}
+                        <div class="mt-2">
+                            <img src="{{ post.image.url }}" class="img-fluid rounded" style="max-height: 200px;" alt="Post image">
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-info">
+                    No posts found matching your criteria.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <!-- Main Content -->
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Recent Posts</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_posts %}
+                    {% for post in recent_posts %}
+                        {% include 'partials/post_card.html' with post=post %}
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No posts yet. Be the first to create one!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+        <!-- Welcome Card -->
+        {% if request.session.username %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Welcome back, {{ request.session.username }}!</h5>
+            </div>
+            <div class="card-body">
+                <a href="{% url 'create_subsphere' %}" class="btn btn-primary w-100 mb-2">
+                    Create Subsphere
+                </a>
+                <a href="{% url 'subsphere_list' %}" class="btn btn-outline-primary w-100">
+                    Browse Subspheres
+                </a>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Popular Subspheres -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Popular Subspheres</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for subsphere in subspheres|slice:":5" %}
+                    <a href="{% url 'subsphere_detail' subsphere.id %}" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ subsphere.name }}</h6>
+                            <small>{{ subsphere.members|length }} members</small>
+                        </div>
+                        <p class="mb-1 text-muted small">{{ subsphere.description|truncatechars:60 }}</p>
+                    </a>
+                    {% endfor %}
+                </div>
+                <div class="mt-3 text-center">
+                    <a href="{% url 'subsphere_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

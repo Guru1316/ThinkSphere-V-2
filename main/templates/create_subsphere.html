@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Subsphere{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Create New Subsphere</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_name" class="form-label">Subsphere Name</label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.name.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_description" class="form-label">Description</label>
+                        {{ form.description }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_image" class="form-label">Subsphere Image (Optional)</label>
+                        {{ form.image }}
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Create Subsphere</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

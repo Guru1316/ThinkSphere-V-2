@@ -1,0 +1,23 @@
+:root {
+  --primary-red: #dc3545;
+  --secondary-red: #ff6b6b;
+}
+
+.navbar {
+  background-color: var(--primary-red)!important;
+  border-bottom: 2px solid white;
+}
+
+.btn-primary {
+  background-color: var(--primary-red);
+  border-color: var(--secondary-red);
+}
+
+.card {
+  border: 1px solid var(--primary-red);
+  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.1);
+}
+
+.badge-secondary {
+  background-color: var(--secondary-red);
+}
