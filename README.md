@@ -16,4 +16,4 @@ A Reddit-style discussion platform built with Django and MongoDB.
 ## Setup
 1. Clone the repo:
    ```bash
-   git clone https://github.com/yourusername/ThinkSphere.git
+   git clone https://github.com/Guru1316/ThinkSphere-V-2.git
